@@ -77,4 +77,4 @@ Base URL: `/api/v1`
 | `POST /dashboards`      | Create dashboard         |
 | `WS /ws/events?token=`  | Live event stream        |
 
-See [OpenPulse-v0.1-spec.md](OpenPulse-v0.1-spec.md) for the full specification.
+See [OpenPulse-v0.1-spec.md](spec-sheets/OpenPulse-v0.1-spec.md) for the full specification.
