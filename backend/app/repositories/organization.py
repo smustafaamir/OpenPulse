@@ -29,3 +29,8 @@ class OrganizationRepository:
             select(Organization).where(Organization.id == org_id)
         )
         return result.scalar_one_or_none()
+
+    async def list_all(self) -> list[Organization]:
+        """Return all organizations."""
+        result = await self._session.execute(select(Organization))
+        return list(result.scalars().all())

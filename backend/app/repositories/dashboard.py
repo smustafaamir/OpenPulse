@@ -51,3 +51,22 @@ class DashboardRepository:
             )
         )
         return result.scalar_one_or_none()
+
+    async def update(
+        self,
+        dashboard_id: UUID,
+        organization_id: UUID,
+        *,
+        name: str | None = None,
+        layout: dict[str, Any] | None = None,
+    ) -> Dashboard | None:
+        """Update a dashboard scoped to an organization."""
+        dashboard = await self.get_by_id(dashboard_id, organization_id)
+        if dashboard is None:
+            return None
+        if name is not None:
+            dashboard.name = name
+        if layout is not None:
+            dashboard.layout = layout
+        await self._session.flush()
+        return dashboard

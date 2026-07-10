@@ -13,6 +13,13 @@ class DashboardCreate(BaseModel):
     layout: dict[str, Any] = Field(default_factory=dict)
 
 
+class DashboardUpdate(BaseModel):
+    """Dashboard update payload."""
+
+    name: str | None = Field(default=None, min_length=1, max_length=255)
+    layout: dict[str, Any] | None = None
+
+
 class DashboardResponse(BaseModel):
     """Dashboard details."""
 

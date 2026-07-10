@@ -23,6 +23,12 @@ class Settings(BaseSettings):
     log_level: str = "INFO"
     app_version: str = "0.1.0"
     default_org_name: str = "default"
+    cors_origins: str = "http://localhost:5173,http://127.0.0.1:5173"
+
+    @property
+    def cors_origin_list(self) -> list[str]:
+        """Parse comma-separated CORS origins."""
+        return [origin.strip() for origin in self.cors_origins.split(",") if origin.strip()]
 
 
 @lru_cache
