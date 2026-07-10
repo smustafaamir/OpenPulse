@@ -188,4 +188,4 @@ Base URL: `/api/v1` · WebSocket: `/ws/events?token=<access_token>`
 | `PATCH /dashboards/{id}` | Update dashboard name/layout |
 | `WS /ws/events?token=` | Live event stream |
 
-See [OpenPulse-v0.1-spec.md](spec-sheets/OpenPulse-v0.1-spec.md) for the full specification.
+See [OpenPulse-v0.2-spec.md](spec-sheets/OpenPulse-v0.2-spec.md) for the full specification.
