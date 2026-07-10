@@ -1,3 +1,5 @@
+<img width="2091" height="600" alt="Banner" src="https://github.com/user-attachments/assets/66c5d351-f064-48d3-a00a-bc7da137c593" />
+
 # OpenPulse
 
 Open-source, multi-tenant event intelligence platform.
