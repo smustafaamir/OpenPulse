@@ -39,6 +39,7 @@ services:
       REDIS_URL: redis://redis:6379/0
       JWT_SECRET: ${JWT_SECRET:-dev-jwt-secret-change-me-in-production}
       CORS_ORIGINS: http://localhost:5173,http://127.0.0.1:5173
+      COLLECTORS: binance
     depends_on:
       postgres:
         condition: service_healthy
@@ -71,7 +72,7 @@ services:
       backend:
         condition: service_healthy
     restart: unless-stopped
-    command: npm run dev -- --host 0.0.0.0
+    command: sh -c "npm install && npm run dev -- --host 0.0.0.0"
 
 volumes:
   postgres_data:

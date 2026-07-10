@@ -6,6 +6,8 @@ Open-source, multi-tenant event intelligence platform. Every data source, dashbo
 
 **v0.1 (MVP)** includes a FastAPI backend, React frontend, mock event collector, JWT auth, REST + WebSocket APIs, and Docker Compose for one-command local development.
 
+**v0.2 Stage 1** adds a config-driven collector registry, live Binance BTC/ETH market data, and Dashboard terminal UX (formatted prices, % change, source badges, and a mock/binance filter). API key management is planned for Stage 2.
+
 ## What's included
 
 | Area | Status |
@@ -13,7 +15,10 @@ Open-source, multi-tenant event intelligence platform. Every data source, dashbo
 | User registration, login, JWT refresh | Done |
 | Multi-tenant organizations | Done |
 | Event ingest, query, and tenant isolation | Done |
-| Mock collector (~1 event/sec per organization) | Done |
+| Mock collector | Available for offline dev (`COLLECTORS=mock`) |
+| Binance spot ticker collector (BTC, ETH) | Done — default data source |
+| Config-driven collector registry (`COLLECTORS`) | Done (v0.2 Stage 1) |
+| Dashboard terminal UX (formatted prices, live tape) | Done (v0.2 Stage 1) |
 | Live event stream via WebSocket | Done |
 | Dashboard CRUD (create, list, get, update layout) | Done |
 | React UI: Login, Dashboard, Events, Settings | Done |
@@ -76,13 +81,13 @@ docker compose ps
 | PostgreSQL | localhost:5432               |
 | Redis      | localhost:6379               |
 
-On startup the backend bootstraps the database schema (Alembic), seeds a default organization, and starts the mock collector. The frontend waits for a healthy backend before starting.
+On startup the backend bootstraps the database schema (Alembic), seeds a default organization, and starts the Binance collector (`COLLECTORS=binance` by default in Docker). The frontend waits for a healthy backend before starting.
 
 ### Verify in the browser
 
 1. Open http://localhost:5173
 2. Register a new account and organization
-3. Open **Dashboard** — live mock events should stream via WebSocket
+3. Open **Dashboard** — live events stream via WebSocket; Binance BTC/ETH prices with formatted columns and source filter
 4. Open **Events** — query historical events with filters and pagination
 5. Open **Settings** — view organization details
 6. Change the dashboard chart symbol — layout persists via the dashboard API
@@ -134,6 +139,9 @@ Copy `.env.example` to `.env` at the repo root for local overrides. Docker Compo
 | `REDIS_URL` | Redis connection string |
 | `JWT_SECRET` | Secret for signing JWTs |
 | `CORS_ORIGINS` | Comma-separated browser origins (default: `http://localhost:5173`) |
+| `COLLECTORS` | Comma-separated collector names: `binance` (default). Use `mock` for offline dev only. |
+| `BINANCE_WS_URL` | Binance combined stream WebSocket URL |
+| `BINANCE_SYMBOLS` | Comma-separated base symbols for Binance tickers (default: `BTC,ETH`) |
 | `VITE_API_BASE_URL` | Frontend REST base URL (empty = use Vite proxy) |
 | `VITE_WS_BASE_URL` | Frontend WebSocket base URL (empty = use Vite proxy) |
 

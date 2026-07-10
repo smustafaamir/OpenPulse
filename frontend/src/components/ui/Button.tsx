@@ -6,9 +6,10 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 
 const variants: Record<NonNullable<ButtonProps["variant"]>, string> = {
   primary:
-    "bg-pulse-600 hover:bg-pulse-500 text-white shadow-lg shadow-pulse-900/30",
-  secondary: "bg-slate-800 hover:bg-slate-700 text-slate-100 border border-slate-700",
-  ghost: "bg-transparent hover:bg-slate-800 text-slate-300",
+    "bg-pulse-600 hover:bg-pulse-500 text-white shadow-lg shadow-pulse-900/30 border border-pulse-500/20",
+  secondary:
+    "glass-inset hover:bg-slate-800/80 text-slate-100 border border-white/10",
+  ghost: "bg-transparent hover:bg-white/5 text-slate-300 border border-transparent",
 };
 
 export function Button({
@@ -19,7 +20,7 @@ export function Button({
 }: ButtonProps) {
   return (
     <button
-      className={`rounded-lg px-4 py-2 text-sm font-medium transition disabled:cursor-not-allowed disabled:opacity-50 ${variants[variant]} ${className}`}
+      className={`press-feedback rounded-lg px-4 py-2 text-sm font-medium disabled:cursor-not-allowed disabled:opacity-50 ${variants[variant]} ${className}`}
       {...props}
     >
       {children}

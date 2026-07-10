@@ -24,11 +24,37 @@ class Settings(BaseSettings):
     app_version: str = "0.1.0"
     default_org_name: str = "default"
     cors_origins: str = "http://localhost:5173,http://127.0.0.1:5173"
+    collectors: str = "binance"
+    binance_ws_url: str = "wss://stream.binance.com:9443/stream"
+    binance_symbols: str = "BTC,ETH"
 
     @property
     def cors_origin_list(self) -> list[str]:
         """Parse comma-separated CORS origins."""
-        return [origin.strip() for origin in self.cors_origins.split(",") if origin.strip()]
+        return [
+            origin.strip() for origin in self.cors_origins.split(",") if origin.strip()
+        ]
+
+    @property
+    def collector_list(self) -> list[str]:
+        """Parse enabled collector names."""
+        seen: set[str] = set()
+        result: list[str] = []
+        for name in self.collectors.split(","):
+            normalized = name.strip().lower()
+            if normalized and normalized not in seen:
+                seen.add(normalized)
+                result.append(normalized)
+        return result
+
+    @property
+    def binance_symbol_list(self) -> list[str]:
+        """Parse configured Binance base symbols."""
+        return [
+            symbol.strip().upper()
+            for symbol in self.binance_symbols.split(",")
+            if symbol.strip()
+        ]
 
 
 @lru_cache

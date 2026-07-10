@@ -6,7 +6,6 @@ import subprocess
 import sys
 
 from sqlalchemy import text
-from sqlalchemy.exc import ProgrammingError
 
 from app.db.session import get_engine
 

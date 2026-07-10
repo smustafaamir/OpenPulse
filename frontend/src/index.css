@@ -2,18 +2,122 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
-  margin: 0;
-  min-height: 100vh;
-  font-family:
-    Inter,
-    system-ui,
-    -apple-system,
-    BlinkMacSystemFont,
-    "Segoe UI",
-    sans-serif;
+@layer base {
+  :root {
+    font: 100%/1.5 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    font-optical-sizing: auto;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  body {
+    margin: 0;
+    min-height: 100vh;
+    background-color: #020617;
+    color: #f8fafc;
+  }
+
+  #root {
+    min-height: 100vh;
+  }
 }
 
-#root {
-  min-height: 100vh;
+@layer components {
+  .glass-chrome {
+    background: rgba(2, 6, 23, 0.72);
+    backdrop-filter: blur(24px) saturate(180%);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.2);
+  }
+
+  .glass-panel {
+    background: rgba(15, 23, 42, 0.55);
+    backdrop-filter: blur(20px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    box-shadow:
+      0 8px 32px rgba(0, 0, 0, 0.25),
+      inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  }
+
+  .glass-inset {
+    background: rgba(15, 23, 42, 0.4);
+    backdrop-filter: blur(16px) saturate(160%);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+  }
+
+  .display-title {
+    font-size: clamp(1.5rem, 3vw, 1.875rem);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    font-weight: 600;
+  }
+
+  .stat-value {
+    font-size: 1.875rem;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .press-feedback {
+    transition: transform 100ms ease-out, background-color 100ms ease-out;
+    touch-action: manipulation;
+  }
+
+  .press-feedback:active:not(:disabled) {
+    transform: scale(0.97);
+  }
+
+  .nav-link {
+    @apply rounded-lg px-3 py-2 text-sm font-medium text-slate-400 transition-colors duration-100;
+  }
+
+  .nav-link:hover {
+    @apply bg-white/5 text-slate-200;
+  }
+
+  .nav-link-active {
+    @apply bg-white/10 text-white;
+  }
+
+  .field-control {
+    @apply rounded-lg border border-white/10 bg-slate-950/50 px-2.5 py-1.5 text-sm text-slate-100 outline-none transition;
+  }
+
+  .field-control:focus-visible {
+    @apply border-pulse-500/50 ring-2 ring-pulse-500/20;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .press-feedback:active:not(:disabled) {
+    transform: none;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .glass-chrome,
+  .glass-panel,
+  .glass-inset {
+    background: rgb(15 23 42);
+    backdrop-filter: none;
+  }
+}
+
+@media (prefers-contrast: more) {
+  .glass-chrome,
+  .glass-panel,
+  .glass-inset {
+    background: rgb(2 6 23);
+    border-color: rgb(148 163 184);
+    backdrop-filter: none;
+  }
 }

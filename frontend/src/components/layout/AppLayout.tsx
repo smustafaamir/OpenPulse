@@ -1,13 +1,10 @@
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/Button";
 import { useAuthStore } from "@/stores/authStore";
+import logo from "@/assets/logo.png";
 
 const navLinkClass = ({ isActive }: { isActive: boolean }) =>
-  `rounded-lg px-3 py-2 text-sm font-medium transition ${
-    isActive
-      ? "bg-pulse-600/20 text-pulse-300"
-      : "text-slate-400 hover:bg-slate-800 hover:text-slate-200"
-  }`;
+  `press-feedback nav-link ${isActive ? "nav-link-active" : ""}`;
 
 export function AppLayout() {
   const navigate = useNavigate();
@@ -20,12 +17,18 @@ export function AppLayout() {
 
   return (
     <div className="min-h-screen bg-slate-950">
-      <header className="border-b border-slate-800 bg-slate-900/80 backdrop-blur">
+      <header className="glass-chrome sticky top-0 z-50">
         <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-4">
           <div className="flex items-center gap-6">
             <div>
-              <p className="text-xs uppercase tracking-[0.2em] text-pulse-400">OpenPulse</p>
-              <h1 className="text-lg font-semibold text-white">Event Intelligence</h1>
+              <img
+                src={logo}
+                alt="OpenPulse"
+                className="h-9 w-auto mix-blend-screen"
+              />
+              <h1 className="mt-1 text-lg font-semibold tracking-tight text-white">
+                Market Terminal
+              </h1>
             </div>
             <nav className="flex items-center gap-1">
               <NavLink to="/dashboard" className={navLinkClass}>

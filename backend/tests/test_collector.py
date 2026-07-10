@@ -18,6 +18,9 @@ async def test_mock_collector_yields_valid_events() -> None:
         assert event.symbol in {"BTC", "ETH", "SPY", "NVDA"}
         assert 1 <= event.importance <= 5
         assert event.timestamp.tzinfo is not None
+        if event.event_type == "price":
+            assert "change_24h_pct" in event.payload
+            assert "asset_class" in event.metadata
         count += 1
         if count >= 1:
             break

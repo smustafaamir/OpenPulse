@@ -10,11 +10,22 @@ import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { useEventsWebSocket } from "@/hooks/useEventsWebSocket";
 import type { DashboardLayout } from "@/types/dashboard";
+import type { EventResponse } from "@/types/event";
 
 const DEFAULT_LAYOUT: DashboardLayout = {
   widgets: ["feed", "chart", "stats"],
   selectedSymbol: "BTC",
 };
+
+const MARKET_SYMBOLS = ["BTC", "ETH"];
+
+function isMarketQuote(event: EventResponse): boolean {
+  return (
+    event.source.toLowerCase() === "binance" &&
+    event.event_type === "price" &&
+    MARKET_SYMBOLS.includes(event.symbol)
+  );
+}
 
 export function DashboardPage() {
   const queryClient = useQueryClient();
@@ -23,7 +34,12 @@ export function DashboardPage() {
 
   const bootstrapQuery = useQuery({
     queryKey: ["events", "dashboard-bootstrap"],
-    queryFn: () => listEvents({ limit: 100 }),
+    queryFn: () =>
+      listEvents({
+        limit: 100,
+        source: "binance",
+        event_type: "price",
+      }),
   });
 
   const dashboardsQuery = useQuery({
@@ -49,7 +65,7 @@ export function DashboardPage() {
 
   useEffect(() => {
     if (bootstrapQuery.data?.items) {
-      setInitialEvents(bootstrapQuery.data.items);
+      setInitialEvents(bootstrapQuery.data.items.filter(isMarketQuote));
     }
   }, [bootstrapQuery.data, setInitialEvents]);
 
@@ -59,13 +75,13 @@ export function DashboardPage() {
       return;
     }
     const layout = dashboards[0].layout as unknown as DashboardLayout;
-    if (layout.selectedSymbol) {
+    if (layout.selectedSymbol && MARKET_SYMBOLS.includes(layout.selectedSymbol)) {
       setSelectedSymbol(layout.selectedSymbol);
     }
   }, [dashboardsQuery.data]);
 
-  const symbols = useMemo(
-    () => Array.from(new Set(events.map((event) => event.symbol))).sort(),
+  const marketEvents = useMemo(
+    () => events.filter(isMarketQuote),
     [events],
   );
 
@@ -82,24 +98,26 @@ export function DashboardPage() {
     <div className="space-y-6">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h2 className="text-2xl font-semibold text-white">Dashboard</h2>
-          <p className="text-sm text-slate-400">
-            Live event intelligence for your organization
+          <h2 className="display-title text-white">Dashboard</h2>
+          <p className="mt-1 text-sm leading-relaxed text-slate-400">
+            Live Binance spot quotes — BTC & ETH
           </p>
         </div>
         <ConnectionStatus status={status} />
       </div>
 
-      <StatisticsPanel events={events} />
+      <StatisticsPanel events={marketEvents} />
 
       <div className="grid gap-6 xl:grid-cols-2">
         <Card
-          title="Live Event Feed"
+          title="Market Tape"
           action={
-            <span className="text-xs text-slate-500">Newest {events.length} events</span>
+            <span className="text-xs text-slate-500">
+              {marketEvents.length} ticks
+            </span>
           }
         >
-          <LiveEventFeed events={events} />
+          <LiveEventFeed events={marketEvents} />
         </Card>
 
         <Card
@@ -107,26 +125,24 @@ export function DashboardPage() {
           action={
             <div className="flex items-center gap-2">
               <label className="text-xs text-slate-400" htmlFor="symbol-select">
-                Symbol
+                Pair
               </label>
               <select
                 id="symbol-select"
                 value={selectedSymbol}
                 onChange={(e) => handleSymbolChange(e.target.value)}
-                className="rounded-lg border border-slate-700 bg-slate-900 px-2 py-1 text-sm"
+                className="field-control press-feedback"
               >
-                {(symbols.length > 0 ? symbols : ["BTC", "ETH", "SPY", "NVDA"]).map(
-                  (symbol) => (
-                    <option key={symbol} value={symbol}>
-                      {symbol}
-                    </option>
-                  ),
-                )}
+                {MARKET_SYMBOLS.map((symbol) => (
+                  <option key={symbol} value={symbol}>
+                    {symbol}/USDT
+                  </option>
+                ))}
               </select>
             </div>
           }
         >
-          <PriceChart events={events} symbol={selectedSymbol} />
+          <PriceChart events={marketEvents} symbol={selectedSymbol} />
         </Card>
       </div>
 

@@ -11,8 +11,8 @@ from app.websocket.manager import ConnectionManager
 router = APIRouter()
 
 
-def create_events_ws_router(connection_manager: ConnectionManager) -> APIRouter:
-    """Create WebSocket router with injected connection manager."""
+def create_events_ws_router() -> APIRouter:
+    """Create WebSocket router; manager is read from app.state at runtime."""
 
     @router.websocket("/ws/events")
     async def events_websocket(
@@ -20,6 +20,7 @@ def create_events_ws_router(connection_manager: ConnectionManager) -> APIRouter:
         token: str = Query(...),
     ) -> None:
         """Stream live events for the authenticated user's organization."""
+        connection_manager: ConnectionManager = websocket.app.state.connection_manager
         settings = get_settings()
         session_factory = get_session_factory()
         async with session_factory() as session:

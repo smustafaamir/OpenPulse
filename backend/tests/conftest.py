@@ -77,7 +77,7 @@ async def client(engine: AsyncEngine) -> AsyncGenerator[AsyncClient]:
         from app.websocket.manager import ConnectionManager
 
         _app.state.redis = redis
-        _app.include_router(create_events_ws_router(ConnectionManager(redis)))
+        _app.state.connection_manager = ConnectionManager(redis)
         yield
 
     app.router.lifespan_context = test_lifespan  # type: ignore[method-assign]

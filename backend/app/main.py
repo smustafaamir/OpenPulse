@@ -37,8 +37,6 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None]:
     app.state.redis = redis
     app.state.connection_manager = connection_manager
 
-    app.include_router(create_events_ws_router(connection_manager))
-
     await seed_default_organization()
     collector_task = start_collector_task(redis)
 
@@ -72,6 +70,7 @@ def create_app() -> FastAPI:
     app.add_exception_handler(Exception, internal_error_handler)
 
     app.include_router(api_router)
+    app.include_router(create_events_ws_router())
     return app
 
 
